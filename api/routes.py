@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request
 
+from api.game_services import create_game, make_move, get_moves, get_games
+
 game_blueprint = Blueprint("game", __name__, url_prefix="/api/v1")
 
 
@@ -19,6 +21,6 @@ def get_moves_route(game_id):
     return get_moves(game_id)
 
 
-@game_blueprint.route("/games/<string:game_id>", methods=["GET"])
-def get_games_route(game_id):
-    return get_games(game_id)
+@game_blueprint.route("/games", methods=["GET"])
+def get_games_route():
+    return get_games()
