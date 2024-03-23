@@ -16,15 +16,42 @@ def create_game(size=3):
 
 
 def get_games():
-    breakpoint()
-    game_list = [{"game_id": game_id, "moves": len(games[game_id].moves), "winner": games[game_id].game_winner} for game_id in games]
-    game_list.sort(key=lambda x: x['game_id'])
+    game_list = [
+        {
+            "game_id": game_id,
+            "moves": len(games[game_id].moves),
+            "winner": games[game_id].game_winner,
+        }
+        for game_id in games
+    ]
+    game_list.sort(key=lambda x: x["game_id"])
     return jsonify({"games": game_list})
 
 
 def make_move(game_id, data):
-    pass
+    if game_id not in games:
+        return jsonify({"message": "Game not found"}), 404
+
+    game = games[game_id]
+    x, y = data.get("x"), data.get("y")
+
+    if x is None or y is None:
+        return jsonify({"message": "Invalid coordinates"}), 400
+
+    if not (0 <= x <= game.size -1 and 0 <= y <= game.size - 1):
+        return jsonify({"message": "Coordinates out of bounds"}), 400
+
+    if game.make_move(x, y):
+        game.random_move()
+        return jsonify({"message": "Move created successfully", "board": game.board}), 201
+    else:
+        return jsonify({"message": "Invalid move"}), 400
 
 
 def get_moves(game_id):
-    pass
+    if game_id not in games:
+        return jsonify({"message": "Game not found"}), 404
+
+    game = games[game_id]
+    game.moves.sort(key=lambda x: x["id"])
+    return jsonify({"game_id": game_id, "moves": game.moves, "board": game.board})

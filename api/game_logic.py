@@ -13,7 +13,7 @@ class TicTacToeGame:
     def make_move(self, x, y):
         if self.board[x][y] == " ":
             self.board[x][y] = self.current_player
-            self.moves.append({"player": self.current_player, "x": x, "y": y})
+            self.moves.append({"id": len(self.moves) + 1, "player": self.current_player, "x": x, "y": y})
             self.current_player = "O" if self.current_player == "X" else "X"
             return True
         return False
@@ -31,4 +31,29 @@ class TicTacToeGame:
             return True
 
     def check_winner(self):
-        pass
+        for i in range(self.size):
+            if all(
+                self.board[i][j] == self.board[i][0] and self.board[i][0] != " "
+                for j in range(1, self.size)
+            ):
+                return True, self.board[i][0]
+
+        for j in range(self.size):
+            if all(
+                self.board[i][j] == self.board[0][j] and self.board[0][j] != " "
+                for i in range(1, self.size)
+            ):
+                return True, self.board[0][j]
+
+        if all(
+            self.board[i][i] == self.board[0][0] and self.board[0][0] != " "
+            for i in range(1, self.size)
+        ):
+            return True, self.board[0][0]
+
+        if all(
+            self.board[i][j] != " " for i in range(self.size) for j in range(self.size)
+        ):
+            return True, "Draw"
+
+        return False, None
