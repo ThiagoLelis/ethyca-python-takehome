@@ -56,7 +56,7 @@ def make_move(game_id, data):
         return jsonify({"message": "Move created successfully", "board": game.board}), 201
 
     else:
-        return jsonify({"message": "Invalid move"}), 400
+        return jsonify({"message": "Invalid move", "board": game.board}), 400
 
 
 def get_moves(game_id):

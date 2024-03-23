@@ -10,8 +10,28 @@ class TestGameApi(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
 
+
+    @patch("api.game_services.games", {})
     def test_create_game(self):
         response = self.app.post("/api/v1/games")
+        data = response.get_json()
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(data["message"], "Game created successfully")
+        self.assertTrue(data["game_id"] == 1)
+
+    @patch("api.game_services.games", {})
+    def test_create_large_game(self):
+        response = self.app.post("/api/v1/games", json={"board_type": "large"})
+        data = response.get_json()
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(data["message"], "Game created successfully")
+        self.assertTrue(data["game_id"] == 1)
+
+    @patch("api.game_services.games", {})
+    def test_create_small_game(self):
+        response = self.app.post("/api/v1/games", json={"board_type": "small"})
         data = response.get_json()
 
         self.assertEqual(response.status_code, 201)
@@ -125,30 +145,32 @@ class TestGameApi(unittest.TestCase):
 
     game = TicTacToeGame()
     game.board = [["X", " ", "X"], ["X", "O", "O"], ["O", " ", "X"]]
+
     @patch("api.game_services.games", {1: game})
     def test_create_winner_move(self):
-        response = self.app.post(
-            f"/api/v1/games/1/moves", json={"x": 0, "y": 1}
-        )
+        response = self.app.post(f"/api/v1/games/1/moves", json={"x": 0, "y": 1})
         data = response.get_json()
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data["message"], "Player X won")
-        self.assertEqual(data["board"], [["X", "X", "X"], ["X", "O", "O"], ["O", " ", "X"]])
-
+        self.assertEqual(
+            data["board"], [["X", "X", "X"], ["X", "O", "O"], ["O", " ", "X"]]
+        )
 
     game = TicTacToeGame()
     game.board = [["X", " ", "O"], ["X", "O", "X"], ["O", " ", "O"]]
+
     @patch("api.game_services.games", {1: game})
     def test_create_lost_winner_move(self):
-        response = self.app.post(
-            f"/api/v1/games/1/moves", json={"x": 0, "y": 1}
-        )
+        response = self.app.post(f"/api/v1/games/1/moves", json={"x": 0, "y": 1})
         data = response.get_json()
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data["message"], "Player O won")
-        self.assertEqual(data["board"], [["X", "X", "O"], ["X", "O", "X"], ["O", "O", "O"]])
+        self.assertEqual(
+            data["board"], [["X", "X", "O"], ["X", "O", "X"], ["O", "O", "O"]]
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

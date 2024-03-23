@@ -7,7 +7,14 @@ game_blueprint = Blueprint("game", __name__, url_prefix="/api/v1")
 
 @game_blueprint.route("/games", methods=["POST"])
 def new_game_route():
-    return create_game()
+    board_type = request.get_json().get("board_type", "normal") if request.content_type else "normal"
+    board_type = board_type.lower()
+    if board_type == 'large':
+        return create_game(size=5)
+    elif board_type == 'small':
+        return create_game(size=2)
+    else:
+        return create_game()
 
 
 @game_blueprint.route("/games", methods=["GET"])
