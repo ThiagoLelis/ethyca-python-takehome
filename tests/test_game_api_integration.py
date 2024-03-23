@@ -123,6 +123,32 @@ class TestGameApi(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertEqual(data["message"], "Game not found")
 
+    game = TicTacToeGame()
+    game.board = [["X", " ", "X"], ["X", "O", "O"], ["O", " ", "X"]]
+    @patch("api.game_services.games", {1: game})
+    def test_create_winner_move(self):
+        response = self.app.post(
+            f"/api/v1/games/1/moves", json={"x": 0, "y": 1}
+        )
+        data = response.get_json()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data["message"], "Player X won")
+        self.assertEqual(data["board"], [["X", "X", "X"], ["X", "O", "O"], ["O", " ", "X"]])
+
+
+    game = TicTacToeGame()
+    game.board = [["X", " ", "O"], ["X", "O", "X"], ["O", " ", "O"]]
+    @patch("api.game_services.games", {1: game})
+    def test_create_lost_winner_move(self):
+        response = self.app.post(
+            f"/api/v1/games/1/moves", json={"x": 0, "y": 1}
+        )
+        data = response.get_json()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data["message"], "Player O won")
+        self.assertEqual(data["board"], [["X", "X", "O"], ["X", "O", "X"], ["O", "O", "O"]])
 
 if __name__ == "__main__":
     unittest.main()

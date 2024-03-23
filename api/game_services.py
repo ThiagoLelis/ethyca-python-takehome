@@ -42,8 +42,19 @@ def make_move(game_id, data):
         return jsonify({"message": "Coordinates out of bounds"}), 400
 
     if game.make_move(x, y):
+        is_winner, winner = game.check_winner()
+        if is_winner:
+            game.game_winner = winner
+            return jsonify({"message": f"Player {winner} won", "board": game.board}), 200
+        
         game.random_move()
+        is_winner, winner = game.check_winner()
+        if is_winner:
+            game.game_winner = winner
+            return jsonify({"message": f"Player {winner} won", "board": game.board}), 200
+        
         return jsonify({"message": "Move created successfully", "board": game.board}), 201
+
     else:
         return jsonify({"message": "Invalid move"}), 400
 
