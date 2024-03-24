@@ -30,8 +30,8 @@ class TestGameApi(unittest.TestCase):
         self.assertTrue(data["game_id"] == 1)
 
     @patch("api.game_services.games", {})
-    def test_create_small_game(self):
-        response = self.app.post("/api/v1/games", json={"board_type": "small"})
+    def test_create_huge_game(self):
+        response = self.app.post("/api/v1/games", json={"board_type": "huge"})
         data = response.get_json()
 
         self.assertEqual(response.status_code, 201)

@@ -11,8 +11,8 @@ def new_game_route():
     board_type = board_type.lower()
     if board_type == 'large':
         return create_game(size=5)
-    elif board_type == 'small':
-        return create_game(size=2)
+    elif board_type == 'huge':
+        return create_game(size=10)
     else:
         return create_game()
 
