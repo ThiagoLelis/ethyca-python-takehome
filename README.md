@@ -117,8 +117,10 @@ To run the tests, use the following command:
 ### Git Logs
 
 Below are the Git logs with the changes made during development:
+![image](https://github.com/ThiagoLelis/ethyca-python-takehome/assets/42333/5777a64a-458b-419c-81a7-caceea032efa)
 
 Feel free to explore the commit history for more details on the changes made.
 
 
 ### Coverage report
+![image](https://github.com/ThiagoLelis/ethyca-python-takehome/assets/42333/9256d3e8-023e-4143-8239-8dfb067d42c4)
